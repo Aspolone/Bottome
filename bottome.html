@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bottome! per mavs</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: rgb(53, 51, 51);
+      margin: 0;
+    }
+
+    p {
+      color: white;
+      font-size: 2rem;
+      padding: 10px 20px;
+      border: 2px solid white;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #22415d;
+      border: 2px solid black;
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 60px;
+      color: rgb(53, 51, 51);
+      width: 110px;
+      height: 110px;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    #reset {
+      display: none;
+      font-weight: bold;
+      font-size: 30px;
+      width: 50px;
+      height: 50px;
+      background-color: #992121;
+    }
+  </style>
+</head>
+<body>
+<p id="number"></p>
+<button id="plus" onclick="addTime()">+</button>
+<button id="reset" onclick="resetTimer()">R</button>
+
+<script>
+  let totalSeconds = 0;
+  let intervalId;
+
+  function updateDisplay() {
+    let hours = Math.floor(totalSeconds / 3600);
+    let minutes = Math.floor((totalSeconds % 3600) / 60);
+    let seconds = totalSeconds % 60;
+
+    let formatted =
+      String(hours).padStart(2, '0') + ':' +
+      String(minutes).padStart(2, '0') + ':' +
+      String(seconds).padStart(2, '0');
+
+    document.getElementById("number").innerText = formatted;
+
+    if (totalSeconds <= 0) {
+      clearInterval(intervalId);
+      document.getElementById("plus").disabled = false;
+      document.getElementById("reset").style.display = "inline-block";
+    }
+  }
+
+  function addTime() {
+    totalSeconds += 15;
+    // Restart the countdown if it wasn't running
+    if (!intervalId) {
+      startCountdown();
+    }
+    updateDisplay();
+  }
+
+  function tick() {
+    if (totalSeconds > 0) {
+      totalSeconds--;
+      updateDisplay();
+    } else {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+  }
+
+  function startCountdown() {
+    if (!intervalId) {
+      intervalId = setInterval(tick, 1000);
+    }
+  }
+
+  function resetTimer() {
+    totalSeconds = 0;
+    document.getElementById("plus").disabled = false;
+    document.getElementById("reset").style.display = "none";
+    updateDisplay();
+    if (intervalId) {
+      clearInterval(intervalId);
+      intervalId = null;
+    }
+  }
+
+  // Initialize display
+  updateDisplay();
+</script>
+
+</body>
+</html>
